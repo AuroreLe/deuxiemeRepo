@@ -1,0 +1,355 @@
+﻿####################################
+####################################
+
+# gitTutorial by Alex Soudant
+
+# Ce tutorial propose les bases pour créer un repertoire git en local puis mettre à jour un repertoire github qui lui sera lié. 
+# On abordera également comment faire une pull request depuis un repertoire forké.
+# Les commandes de la console seront présentées sous Linux puis sous Windows.
+
+####################################
+####################################
+
+# Avoir git d'installé (souvent il est installé par défaut)
+
+# Configurer votre email et identité sous git
+# ces informations seront attachées aux modifications que vous ferez à vos fichiers
+# ce qui permet à plusieurs utilisateurs de voir qui a modifié les fichiers
+# le mieux est de remettre email et nom d'utilisateur que vous avez configurez sous github
+ 
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+
+# Allez à l'emplacement du repertoire que vous voulez créer
+
+# LINUX
+> cd /home/user/Documents
+
+# Windows
+> CD C:\Documents\
+
+# Créer le repertoire (soit par ligne de commande soit manuellement en clic droit)
+
+# LINUX
+> mkdir monRepo
+
+# Windows
+> MKDIR monRepo
+
+# Changez le chemin de votre console pour être à l'intérieur du repertoire créé
+
+# LINUX
+> cd /home/user/Documents/monRepo
+
+# Windows
+> CD C:\Documents\monRepo
+
+####################################
+
+# A partir de là, les commandes seront des commandes de git, donc pas de differences entre les OS!
+
+# On initie un nouveau repertoire git qui va tracker TOUS les changements fait à l'intérieur de ce repertoire
+> git init
+
+# On peut à présent mettre des fichiers dans ce repertoire (copy/paste ou création de nouveaux fichiers sont possible)
+# j'ai ajouté quatre fichiers : hello.py fichier1.txt fichier2.txt fichier3.txt
+
+# J'indique à git que je ne veux enregistrer que les changements réalisés sur hello.py et fichier1.txt
+> git add hello.py fichier1.txt 
+
+# On peut voir que git va les trouver avec la commande:
+> git status
+
+#resultat:
+
+#########################
+On branch master
+
+Initial commit
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+
+	new file:   fichier1.txt
+	new file:   hello.py
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	.hello.py.swp
+	fichier2.txt
+	fichier3.txt
+	hello.py~
+########################
+
+# On voit que fichier2.txt et fichier3.txt sont dans la catégorie 'Untracked files' et ne seront pas pris en charge par git
+
+# En revanche fichier1.txt et hello.py sont dans la catégorie 'Changes to be commited' et sont donc suivis par git
+
+# Maintenant il faut dire à git que nous validons la création de ces fichiers (ou des modifications faites dans ces fichiers) par un 'commit'
+> git commit -m "j'ai ajoute deux fichiers!"
+
+# le message lié au commit permet pour vous et les autres utilisateurs de garder une trace des modifications effectuées
+
+#resultat:
+
+#########################
+[master (root-commit) 4936cdc] add a lot of crapp!
+ 2 files changed, 2 insertions(+)
+ create mode 100644 fichier1.txt
+ create mode 100644 hello.py
+#########################
+
+# ces commits sont enregistrés dans un journal sous la commande 'log'
+>  git log
+
+#resultat:
+
+#########################
+commit 4936cdcdc92d50ccb97339a98b377c7b2a0dc68a
+Author: asoudant <asoudant@homail.fr>
+Date:   Thu Dec 8 15:10:40 2016 +0100
+#########################
+
+# On peut maintenant s'interesse aux branches d'un repertoire git.
+# Une branche permet de garder une copie du repertoire principal (nommé master) et de faire des modifications qui ne seront
+# enregistrées QUE sur cette branche. On peut donc faire des betises sans que cela n'affecte le travail fait avant.
+
+# la commande git branch vous affiche vos branches (dans notre cas seul master est présent)
+> git branch
+
+#resultat:
+
+#########################
+* master
+#########################
+
+# Nous allons donc ajouter une branche supplémentaire
+> git branch say-goodbye
+
+# Nous la voyons a présent dans nos branches mais l'astérisque * indique que nous travaillons toujours sous master
+> git branch
+
+#resultat:
+
+#########################
+* master
+  say-goodbye
+#########################
+
+# Nous allons indiquer que nous travaillons sur cette branche ci:
+> git checkout say-goodbye
+
+#resultat:
+
+#########################
+Switched to branch 'say-goodbye' 
+#########################
+
+# On va maintenant créer la connexion entre votre répertoire en local et sur github
+# Pour cela, allez sous github, et créez un nouveau repertoire (bouton New dans l'onglet Repositories de votre profil)
+# et copiez l'adresse qui est proposée dans le bouton vert 'Clone ou Download' une fois que le repertoire créé
+
+> git remote add origin https://github.com/AlexSoudant/git-tuto.git
+
+# On peut maintenant uploader nos fichiers sur github par la commande 'push'
+> git push -u origin master
+# On précise ici que l'on souhaite upload uniquement la branche master
+
+# Git va vous demander de rentrer vos identifiants github:
+
+Username for 'https://github.com': AlexSoudant
+Password for 'https://AlexSoudant@github.com':
+
+#resultat:
+
+######################### 
+Counting objects: 7, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (7/7), 486 bytes | 0 bytes/s, done.
+Total 7 (delta 1), reused 0 (delta 0)
+To https://github.com/AlexSoudant/git-tuto.git
+ * [new branch]      master -> master
+######################### 
+
+# On peut également penser qu'un autre utilisateur ait modifié le repertoire github et donc vous souhaitez downloader
+# ces modifications en local:
+> git pull origin master
+
+###########################################################
+
+# Pour les repertoires forkés, on créé donc une copie d'un repertoire github vers un autre repertoire github
+# On ne peut donc effectuer des modifications que sur notre copie github et notre copie locale mais non sur le repertoire d'origine
+
+# il faut donc faire une 'new pull request' qui s'affiche sur la page du repertoire github 
+# Github va comparer votre version avec la version d'origine
+# vous pouvez également inverser le sens de la relation votreRepo -> sonRepo par votreRepo <- sonRepo
+# en cliquant sur 'Try switching base'
+
+# Vous aurez ensuite à cliquer sur 'Create pull request' et renseigner les boites d'écriture pour vos modifications apportées
+# puis à nouveau cliquer sur 'Create pull request'
+
+# si vous etes dans le sens votreRepo <- sonRepo vous pouvez cliquer sur 'Merge pull request' pour accceter les modifications
+# sinon dans le sens votreRepo -> sonRepo vous n'avez plus qu'a attendre que la personne en charge du repertoire d'origine accepte 
+# vos modifications.
+
+###########################################################
+
+Pour vous entrainez: 
+
+- Créez un repertoire local
+- Forkez mon repertoire github vers votre github
+- faites le lien entre le repertoire local et votre repertoire github
+- Ajoutez des modifications en local
+- Pushez sur votre repertoire github
+- Faites une pull request pour que j'accepte votre modification
+
+Ajoutez moi un petit chat dans ce fichier pour prouver que vous avez suivi!
+
+    /\__/\
+   /`    '\
+ === 0  0 ===
+   \  --  /
+  /        \
+ /          \
+|            |
+ \  ||  ||  /
+  \_oo__oo_/#######o Bon courage! 
+
+    /\__/\
+   /`    '\
+ === 0  0 ===
+   \  --  /
+  /        \
+ /          \
+|            |
+ \  ||  ||  /
+  \_oo__oo_/#######o Bon courage!
+  
+  
+                                                                                                                                         
+,------.                                                                                            ,--.                                
+|  .-.  \ ,-----. ,---.  ,---. ,--,--,--. ,---.      ,--,--.,--.,--.    ,--,--,--. ,--,--.,--.  ,--.`--',--,--,--.,--.,--.,--,--,--.    
+|  |  \  :`-.  / | .-. || .-. ||        || .-. :    ' ,-.  ||  ||  |    |        |' ,-.  | \  `'  / ,--.|        ||  ||  ||        |    
+|  '--'  / /  `-.' '-' '' '-' '|  |  |  |\   --.    \ '-'  |'  ''  '    |  |  |  |\ '-'  | /  /.  \ |  ||  |  |  |'  ''  '|  |  |  |    
+`-------' `-----' `---'  `---' `--`--`--' `----'     `--`--' `----'     `--`--`--' `--`--''--'  '--'`--'`--`--`--' `----' `--`--`--' 	                                                                                                                                                                                                                                 
+																																						 
+																	  .. ... BIGEARD                                                                            
+																	............                                                                         
+																 .,.................                                                                     
+																 .:.....................                                                                 
+																 :1;......................                                                               
+									..  .......                 .::,.......................                                                              
+								.....................   .....  .,ii:..........................                                                           
+								...............................,tfLCf:...........................                                                        
+								...............................,ifGGCL;...............................                                                   
+								...............................:;fCG0GGCt:.......,........................                                               
+								.,.........................,;t1tC0G0G0000GGL;.......,,,,,,,,................                                             
+								   .,:,................,1LCCCCG0GLLCGCCCGGLftti......,,,,,,,,,,,,.............                                           
+								   ,i1tttttti;,.......:tffCCCCCLttfGCCCGLtftLCLf1,..  ..,,,,,,,,,,,,,...........                                         
+								 .;tLLffffLLLLLfftffftfLfLLffLCCt1tfLCCti1LLfttttt1;.....,,,,,,,,,,,,...............                                     
+								.iffLLfffffLLffffLCLfLfLLff11tGC11fLCfi;tLti;iifLfLf1;....,,,,,,,,,,,,,...............                                   
+							   :fCffffffffffffffLLffftCfLf;:;1Lfi1fLLti;ft;::;i1fLfi;::,..,,,,,,,,,,,,,,,...............                                 
+							 ,tG0GCffftffffttfLLf1i1ttfCt::::;i1i1tfi;;i;:,,:::itL1;,:::,,,,,,,,,,,,,,,,,,...............                                
+						 :f00000GLLffffffftfLCf11iii1tL1::::,,:::i;;::;:;:,,,:;i1i:,,,,:;:;;;:,,,,,,,,,,,,,................                              
+				 ..,,iC00088880000GCffffftftt1111;::ift;::,,,::::;;:::,,:,:::,,::,,,;LG0GGCLt;,,,,,,,,,,,,,,,...............                             
+	.        .:1C00000088888888880GGGfffftt1i;;;::::,;i;:,,,:,,,:;;::::::,:,,,..,,100880GCCLLf1......,,,,,,,,,,................                          
+	 .,...,fCG00000008888888888880000Cfftiiiii1tff1;,,,,,,,,,:,:;:::;:::::,,...,:L088000000GttLi.....,,,,,,,,,,,,...............                         
+	   .;1GG0000000088888888888888800Gf1i;;itLCLLCCLLL;,....,::::::::::::,....,:fG8008GG00000ffC,.....,,,,,,,,,,,,,............. .                       
+		.:fG00000000888888888888800GLti;;;i1ffLfttC0888C,...,,,:::;::::::,,,.,:tGG800fC0CCG0GLC1:....,,,,,,,,,,,,,,,,..............                      
+		  :fC000000888888888888800Gf111;ii1tt11f88888008C,..,,,:;:;;;:::,,,,,;tG80C01i100GGLL1:;i,...,,,,,,,,,,,,,,,,,,..............                    
+		   .i10000088888888888880Ct111111ttftfC880080800C;,,,:::;;;:;;;;;::itCLL00GLt1fLf1i::;i1i;...,,,,,,,,,,,,,,,,,,,..............                   
+			 .,L000888888888880Ctttftf11i;iLLf88G:,t8Lftfi:,:;;itt111111i1itG0GLLti:::,,:;;;;;;;i;,..,,,,,,,,,,,,,,,,,,,,.............                   
+			   100008888888800Ltffti;:::::iGLLL000C0Ci1tftii1ttfLftfftttfffff0GCf1i;;;;iiii;;;;;;;i...,,,,,,,,,,,,,,,,,,,,............                   
+			   .G000888888880CfLCtii;;;:::;f0CLft1i11tfLf1tfffLfffLLfffftfttLLCLt1i;;:;;:;;;ii;;;i;,..,,,,,,,,,,,,,,,,,,,.............                   
+				:C00088888880GGGf1111iii;:::;1tftti:;1LfttfLftttffLLLCLfftf111t11;;;:;::;;:;;;:;;;;;..,,,,,,,,,,,,::,,,,,,...........                    
+				.C00088888800GGCfttffti11i;;;;;:::;;iLf1ttfLLt11ii11tfCfft11ii;;;;;::::::,,:,,::;:;;:.,,,,,,,,,,,:;:,,,,,,............                   
+				 L00088888880GCLftttt11iiiiii;;;::;i11i1i1ff11iiii18GLGCt1;;i;;i;;::;;;::,,,,:::::,::.,,,,,,,,,,:;i;,,,,,,...........                    
+				 iC000888800GCCft11t1t11i1ii;::::::;;i;;i1tLCGt;ii1GCt;::::::;;;1Lfi;;i;i;::,,,::::,,.,,,,,,,,,:;;1;,,,,,,..........                     
+				 iC000008000GGCftttt11111i;::,,,::::;;;::,,,,iL1tttLi,,,,,:,;i;;;;::;:;:::::;i;;;;;:,,,,,,,,,,,iiii:,,,,,,........                       
+				 1G000000000GCGLt111ttii1i:,,,,::;;i:::,,.....:tfLfi,,,,,,,,,::;iii;1t::::,,,::;;:::,,,,,,,,:;;i1t;,,,,,,,.......                        
+				.t00000000000GGfiiiiiii1i;;:::::::::;i;:,...,,,:;L1::::,,:,,:::::::,::::::::::::::,,,,,,,,,:;;i1t;,,,,,,,.......                         
+				.tG000000GG00GCt1iiiiii1i;:::,,,,:;;::,,,.,,,,,:;tLi:,,,,:,,,,,:::::;ii;:::,:::;i;::,,,,,,;;::::;,,,,,,,,......                          
+				iG00GGGLG0GGG0Lt1iiiii1t1i;::::;:::::::,,,,,,,,:ifCti;,,,,,,,,:::::::::::::;;::::,,,,:,,,,::::;;,.,,,,,,,.......                         
+			   .CGG0GGG1:f0GGCCt1iiiiiiiii;;::,,:::;::,,,,,,,,:1CCLLLCft1;::,,,:::::;:::;;;:::::::,,,.,,,,,,,::::.,,,,,,,......                          
+			  .LGG000GC1.  ,:fLtt11tf1i11;:::::;:::::::::,,,:1Lfftt1111tfCGGL1;,,:::::::,:,,,::,,,,,.,,,,.,,,,:::.,,,,,,,.....                           
+			.1GGGGGGGGf:     .:ftitLLLf111i;::::::;;:::::::;CC1i::::,:,:;;itG08C;:,,,:;:;:::,,,,,,,,,,,,,....:;:::,.,,,,,....                            
+		  .1GGGGG00G00C,       ...,CCLft11;:;;::::::::::::;ff;:,,,,,,,,,,,,,,:::,,,,,,:::;;::,,,.,,,,,,,,.....,,:i:..,,,,....                            
+.           .fCCCCtCGCLLti.           .1t1i;i;;;:;::;;;:;::::i;:,,,,,..,,..,,,..........,,,,,,,,,,,,,,,,,,,,...........,..,,...                             
+		.tCf;.   .,,..               ,;1iii;;;;;;;;;;;i;;:,,,..,,........,...............,,,,.,,,,,,,,,,,,..............,..                              
+	  ..,;ii,                        ,;11iiiiiii;;;;;;:::,,,,............................,,,..,,,,,,,,,,,,,................                              
+									 .:itt11t11ii;;;;;:::,,,,..........................,,,...... .,,,,,,,,,,.................                            
+									  .ittttttt111ii;;;::::,,,,,..............,,,,,,,,,,.... .   .,,,,,,,,,,,................                            
+									   ;tffffffft11iii;;;:::,,,,,,,,........,,,,,,,,,,,....    ..,,,,,,,,,,,,.................                           
+									   .:tfffffttttt11ii;;;::::,,,:,,,,,,,:,:,:,,:,:,....     .,,,,,,,,,,,,,,..................                          
+									  .:1fffffffftfttt1iii;;;;::::;::::::,:::::::::,.... ....,,,,,,,,,,........................                          
+									.,itCGCCLffftfttt11iiiii;;;:;;;::::::::::::::,.....,,,,,,,,,,,,,,........................ .                          
+									 ;tLGGGCCCLLftttt11111iiii;;;::::;::::::::::...,,,,,,,,,,,,,,,,...........................                           
+									.1GG00GCCGGCLLfftt11111t1i;;iii;i;;;;;;:::,.,,,,,,,,,,,,,,,,..............................                           
+									:fGGGGGGGGCCGGGLfftffffttt1tftt111111ii;:.,,,,,,,,,,,,,,,,.........................  .                               
+									;CCGGGGGGCCGGGG000GCCCLLffttttt1111iii1,,,,,,,,,,,,,,,,,..................... .                                      
+								  .:tCCGGGGGGCGGGCGCG0000G0GGCffffftt1iii;.,,,,,,,,,,,,,,,...................                                            
+								  ,;LGGGGGCCGLCLLCLfCGGCCG080GG0CGCLft1i..,,,,,,,,,,,,,,..................                                               
+								 ,:tLCCCCCLLff11ii11i11tLLCCGG88000GCf,.,,,,,,,,,,,,,,,................                                                  
+								 ;tGCCCff1i1i1i;;;;ii;;i1tfLGGG00000L,,,,,,,,,,,,,,,................                                                     
+								.:LCfti;;ii;iiiiiii1iiiii1tLCGGCfi...,,,,,,,,,,,,,,,.............                                                        
+								.tCLt1i;;;;;;;;;;;;;iiiiiii1fCCC1..,,,,,,,,,,,,,,..............                                                          
+							   .;Lt1i;:;;:;;:;;;;;;;;;ii;;;ii1tLLi,,,,,,,,,,,,,,.............                                                            
+							   :tti;::::::::;;;;i;;iiii1iii;;i1t1;:,,,,,,,,,,,,,............                                                             
+							  ,ft1;::::::::;i;;ii11t;iii;;;;;i11ttf1:,,,,,,,,,,,..........                                                               
+							 ,it;::;:::::;;iiii111tfLi1ii;;;;;;;itfCt:,,,,,,,,,..........                                                                
+						   .itti:::,,:::;ii111111tfft1t1i;i;;;;;;;ifL1ii:,,,,,,..........                                                                
+						  :LCfi:,,,,::;i;i11t1tfttt11tf1i1ii;;;;;i;1i:,,,,,,,,,,.........                                                                
+						 .tLLfi,,,,::;i;ii111tLfttt11tff1iii;iiiiii;,,,,,,,,,,,,,........ .                                                              
+						 ,LCti:,,:::;;;i111ttftftfft1ii11111ii11ii;;:,,,,,,,,,,,,...........                                                             
+						.;LLti,,,:::;;iii11ft1ttfff1111;;ii;;iitti;;:,,,,,,,,,,,............                                                             
+						1LLLt:,,,::;ti;;;itt1ifttttt11iii;ii;;ifCti;,,,,,,,,,,,,..............                                                           
+					   ;LLLLt:,,,:;;;::ii111tt1tt11ttt11iiiiiiii;;i;,,,,,,,,,,,,,............                                                            
+					  ,tffff1;,,,:;i;:;iiiiii1111i111111iii;;i;;;i;,,,,,,,,,,,,,...............                                                          
+					 .1ftffti:,.,:::;:;;;;;;;ii1tiiii11111ii;;;;;;;:,,,,,,,,,,,................                                                          
+					.    .......,,,::::::::;;;ii;ii1iiiifff11;;:::,,.....,,...................                                                           
+							 .....,,:::::::;:;i;;;;;i;;;;;;;1fi::,,,.........................                                                            
+								...,,:::::::::;;ii1;;ii;i;::::::,,,..........................                                                            
+								   ..,::::,:,:::;;;;i;;;:;:,:,:,,,...........................                                                            
+									 ..,,,,,,,::::::::::i1;,::,,............................                                                             
+										 ...,,,,,,,,,,,,::,,........   ....................                                                              
+											.........,,........         ..................                                                               
+													  ....                ..............                                                                 
+																			  ......                                                                     
+																																						 
+																																						 
+																																						 
+
+    /\__/\
+   /`    '\
+ === 0  0 ===
+   \  --  /
+  /        \
+ /          \
+|            |
+ \  ||  ||  /
+  \_oo__oo_/#######o
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+  
+
+
+
+
+
+
+
